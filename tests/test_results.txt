@@ -1,0 +1,8 @@
+smoke_test.py [OK]
+
+unit_test.py [3 Failures]
+- test_clear_classification_output (AssertionError: 'cloudy' != 'clear')
+- test_foggy_classification_output (AssertionError: 'cloudy' != 'foggy')
+- test_rainy_classification_output (AssertionError: 'cloudy' != 'rainy')
+
+integration_test.py [todo]

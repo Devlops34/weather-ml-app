@@ -1,6 +1,19 @@
 import unittest
 from app import app  # Import your Flask app instance
+import warnings
+from sklearn.exceptions import InconsistentVersionWarning
 
+
+# Silence sklearn version warning
+warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
+
+# Silence "X does not have valid feature names" warnings from sklearn
+warnings.filterwarnings("ignore",
+                        message="X does not have valid feature names",
+                        module="sklearn.utils.validation")
+
+# Silence ResourceWarning about unclosed files (ideally also fix the loader)
+warnings.filterwarnings("ignore", category=ResourceWarning)
 
 class TestModelAppIntegration(unittest.TestCase):
 
@@ -26,9 +39,11 @@ class TestModelAppIntegration(unittest.TestCase):
 	
 		# Complete below
 		# Ensure that the result page (response.data) should include a weather prediction
+		self.assertIn(b"The weather is:", response.data)
 		
 	
 		# Ensure that the result page should include a prediction time
+		self.assertIn(b"Prediction time:", response.data)
 		
 
 		html_text = response.data.decode('utf-8').lower()
@@ -39,6 +54,8 @@ class TestModelAppIntegration(unittest.TestCase):
 		found = any(weather in html_text for weather in valid_classes)
 		
 		# Ensure that classification is in valid classes, provide an error message if not.
+		self.assertTrue(found, "The predicted weather condition is not in the valid classes.")
+
 		
 
 if __name__ == '__main__':

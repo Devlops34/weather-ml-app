@@ -5,4 +5,17 @@ unit_test.py [3 Failures]
 - test_foggy_classification_output (AssertionError: 'cloudy' != 'foggy')
 - test_rainy_classification_output (AssertionError: 'cloudy' != 'rainy')
 
-integration_test.py [todo]
+integration_test.py [] Output
+F
+======================================================================
+FAIL: test_model_app_integration (tests.integration_test.TestModelAppIntegration.test_model_app_integration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\admin\Desktop\DevOps-CW\weather-ml-app\tests\integration_test.py", line 42, in test_model_app_integration
+    self.assertIn(b"The weather is:", response.data)
+AssertionError: b'The weather is:' not found in b'<!DOCTYPE html>\n<html>\n<head>\n    <title>Weather Classification Input</title>\n</head>\n<body>\n    <h1>Weather Classification:</h1>\n    <p><strong> Enter measurements below<strong><p>\n\n    \n    <p style="color:red;">Error processing input: dtype=&#39;numeric&#39; is not compatible with arrays of bytes/strings.Convert your data to numeric values explicitly instead.</p>\n    \n\n    <form method="POST" action="/">\n        <label>Temperature (F): <input type="number" step="any" name="temperature" required></label><br>\n        <label>Pressure: <input type="number" step="any" name="pressure" required></label><br>\n        <label>Humidity: <input type="number" step="any" name="humidity" required></label><br>\n        <label>Wind Speed: <input type="number" step="any" name="wind_speed" required></label><br>\n        <label>Wind Degree: <input type="number" step="any" name="wind_deg" required></label><br>\n        <label>Rain 1h: <input type="number" step="any" name="rain_1h"></label><br>\n        <label>Rain 3h: <input type="number" step="any" name="rain_3h"></label><br>\n        <label>Snow: <input type="number" step="any" name="snow"></label><br>\n        <label>Clouds: <input type="number" step="any" name="clouds"></label><br><br>\n        <button type="submit">Predict</button>\n    </form>\n</body>\n</html>'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.366s
+
+FAILED (failures=1)

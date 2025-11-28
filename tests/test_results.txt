@@ -19,3 +19,6 @@ AssertionError: b'The weather is:' not found in b'<!DOCTYPE html>\n<html>\n<head
 Ran 1 test in 0.366s
 
 FAILED (failures=1)
+
+After Bugfixing
+No errors in any tests

@@ -1,0 +1,34 @@
+name: CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker login
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login \
+            -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Pull latest image
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app:latest
+
+      # Remove the pulled docker container if it exists
+      - name: Delete Docker container
+        run:  docker rm -f weather-ml-app || true
+        
+      - name: Run Docker container
+        run: sudo docker container run --detach --publish 5000:5000 --name weather-ml-app ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app:latest
+
+
+        #Todo 
+        #
+        #Minikube See Lab 6 notes

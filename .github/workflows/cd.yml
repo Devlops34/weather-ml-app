@@ -1,43 +1,48 @@
 name: CD pipeline
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    # Only run if the CI pipeline was successful
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
 
-    steps:
 
-      
+    steps:    
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Check Docker version to ensure Docker is available
-      - name: Check Docker version
+      # Minikube deployment
+      - name: Check Minikube status
         run: |
-          sudo docker --version
-          sudo docker ps
+          minikube status || minikube start
 
-
-      - name: Docker login
+    
+      # Deploy to Minikube
+      - name: Deploy to Minikube
         run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login \
-            -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
 
-      - name: Pull latest image
-        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app:latest
+      - name: Verify Deployment
+        run: |
+          kubectl get deployments
+          kubectl get services
 
-      # Remove the pulled docker container if it exists
-      - name: Delete Docker container
-        run:  sudo docker rm -f weather-ml-app || true
-        
-      - name: Run Docker container
-        run: sudo docker container run --detach --publish 5000:5000 --name weather-ml-app ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app:latest
+      - name: Minikube service URL
+        run: |
+          minikube service weather-ml-app --url
 
+      - name: Test Application Endpoint
+        run: |
+          APP_URL=$(minikube service weather-ml-app --url)
+          curl -f $APP_URL || exit 1
 
-        #Todo 
-        #
-        #Minikube See Lab 6 notes
+      - name: Deployment Successful
+        run: echo "Application deployed and verified successfully!"
+

@@ -29,11 +29,6 @@ jobs:
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
-      - name: Verify Deployment
-        run: |
-          kubectl get deployments
-          kubectl get services
-
       - name: Minikube service URL
         run: |
           minikube service weather-ml-app --url
@@ -43,6 +38,4 @@ jobs:
           APP_URL=$(minikube service weather-ml-app --url)
           curl -f $APP_URL || exit 1
 
-      - name: Deployment Successful
-        run: echo "Application deployed and verified successfully!"
 

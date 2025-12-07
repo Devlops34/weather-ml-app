@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: weather-ml-app
   labels:
-    app: nginxweather-ml-app
+    app: weather-ml-app
 spec:
   replicas: 3
   selector:

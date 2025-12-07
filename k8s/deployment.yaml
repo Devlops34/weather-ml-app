@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: weather-ml-app
-        image: DOCKERHUB_USERNAME/weather-ml-app:latest
+        image: jcoult300/weather-ml-app:latest
         ports:
         - containerPort: 5000

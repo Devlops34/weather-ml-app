@@ -10,8 +10,17 @@ jobs:
     runs-on: self-hosted
 
     steps:
+
+      
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # Check Docker version to ensure Docker is available
+      - name: Check Docker version
+        run: |
+          sudo docker --version
+          sudo docker ps
+
 
       - name: Docker login
         run: |
@@ -23,7 +32,7 @@ jobs:
 
       # Remove the pulled docker container if it exists
       - name: Delete Docker container
-        run:  docker rm -f weather-ml-app || true
+        run:  sudo docker rm -f weather-ml-app || true
         
       - name: Run Docker container
         run: sudo docker container run --detach --publish 5000:5000 --name weather-ml-app ${{ secrets.DOCKERHUB_USERNAME }}/weather-ml-app:latest

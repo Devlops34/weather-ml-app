@@ -1,0 +1,31 @@
+- name: DevOps Task 3
+  hosts: localhost
+  become: yes
+  user: ubuntu
+
+  tasks:
+
+    - name: (a) Install Kubectl
+      command: snap install kubectl --classic
+
+    - name: (b) Download Minikube
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
+
+    - name: (b) Start Minikube
+      become: false
+      command: minikube start
+
+    - name: (c) Deploy your image from DockerHub to Kubernetes
+      become: false
+      command: kubectl create deployment weather-ml-app --image=jcoult300/weather-ml-app:latest
+
+    - name: (d) Create a Service for your application
+      become: false
+      command: kubectl expose deployment/weather-ml-app --type="NodePort" --port 5000 --name node-port-service
+
+    - name: (e) Scale your deployment appropriately to allow for Rolling Updates to be implemented in the future
+      become: false
+      command: kubectl scale deployments/weather-ml-app --replicas=4
